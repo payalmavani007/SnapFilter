@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:background="@color/colorPrimary"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.android.facefilter.camera.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.android.facefilter.camera.GraphicOverlay
+            android:id="@+id/faceOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </com.android.facefilter.camera.GraphicOverlay>
+
+    </com.android.facefilter.camera.CameraSourcePreview>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:layout_weight="1"
+        android:layout_margin="3dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/click"
+        android:src="@drawable/snapcamera"
+        />
+        <ImageView
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/click1"
+            android:src="@drawable/snapcamera"
+            />
+        <ImageView
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/click2"
+            android:src="@drawable/snapcamera"
+            />
+        <ImageView
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/click3"
+            android:src="@drawable/snapcamera"
+            />
+        <ImageView
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/click4"
+            android:src="@drawable/snapcamera"
+            />
+    </LinearLayout>
+</LinearLayout>
