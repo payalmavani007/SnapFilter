@@ -223,7 +223,8 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
      */
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
         if (mCameraSource != null) {
             mCameraSource.release();
@@ -380,6 +381,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
            }
            case R.id.click11:
            {
+
                Toast.makeText(this, "Click11.", Toast.LENGTH_SHORT).show();
                break;
 
@@ -419,6 +421,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
         /**
          * Start tracking the detected face instance within the face overlay.
          */
+
         @Override
         public void onNewItem(int faceId, Face item) {
             mFaceGraphic.setId(faceId);
@@ -427,6 +430,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
         /**
          * Update the position/characteristics of the face within the overlay.
          */
+
         @Override
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
             mOverlay.add(mFaceGraphic);
@@ -438,6 +442,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
          * intermediate frames temporarily (e.g., if the face was momentarily blocked from
          * view).
          */
+
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             mOverlay.remove(mFaceGraphic);
@@ -447,6 +452,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
          * Called when the face is assumed to be gone for good. Remove the graphic annotation from
          * the overlay.
          */
+
         @Override
         public void onDone() {
             mOverlay.remove(mFaceGraphic);
