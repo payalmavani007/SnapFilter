@@ -23,11 +23,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.view.LayoutInflater;
-import android.view.View;
 
 import com.android.facefilter.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
+
+import java.net.URISyntaxException;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
@@ -40,7 +40,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float ID_X_OFFSET = -50.0f;
     private static final float GENERIC_POS_OFFSET = 20.0f;
     private static final float GENERIC_NEG_OFFSET = -20.0f;
-
+    private  Context context;
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private static final int COLOR_CHOICES[] = {
@@ -57,14 +57,13 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private Paint mFacePositionPaint;
     private Paint mIdPaint;
     private Paint mBoxPaint;
-Context context;
     private volatile Face mFace;
     private int mFaceId;
     private float mFaceHappiness;
     private Bitmap bitmap;
     private Bitmap op;
 
-    FaceGraphic(GraphicOverlay overlay) {
+    FaceGraphic(GraphicOverlay overlay)  {
         super(overlay);
 
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
@@ -81,16 +80,17 @@ Context context;
         mBoxPaint.setColor(selectedColor);
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
+
         bitmap = BitmapFactory.decodeResource(getOverlay().getContext().getResources(), R.drawable.op);
+
         op = bitmap;
 
-
     }
+
 
     void setId(int id) {
         mFaceId = id;
     }
-
 
     /**
      * Updates the face instance from the detection of the most recent frame.  Invalidates the
@@ -101,6 +101,7 @@ Context context;
         mFace = face;
         op = Bitmap.createScaledBitmap(bitmap, (int) scaleX(face.getWidth()),
                 (int) scaleY(((bitmap.getHeight() * face.getWidth()) / bitmap.getWidth())), false);
+
         postInvalidate();
     }
 
@@ -126,9 +127,11 @@ Context context;
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
         canvas.drawBitmap(op, left, top, new Paint());
+
     }
 
     private float getNoseAndMouthDistance(PointF nose, PointF mouth) {
         return (float) Math.hypot(mouth.x - nose.x, mouth.y - nose.y);
     }
+
 }

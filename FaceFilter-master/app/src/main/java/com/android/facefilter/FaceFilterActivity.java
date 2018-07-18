@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -13,8 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 import com.android.facefilter.camera.CameraSourcePreview;
 import com.android.facefilter.camera.GraphicOverlay;
@@ -29,15 +30,17 @@ import com.google.android.gms.vision.face.FaceDetector;
 import java.io.IOException;
 
 public class FaceFilterActivity extends AppCompatActivity implements View.OnClickListener {
-    ImageView click,click1,click2,click3,click4;
+
+    ImageView click,click1,click2,click3,click4,click5,click6,click7,click8,click9,click10,click11;
     private static final String TAG = "FaceTracker";
-
     private CameraSource mCameraSource = null;
-
     private CameraSourcePreview mPreview;
+    private boolean mIsFrontFacing = true;
     private GraphicOverlay mGraphicOverlay;
-
+    private FaceGraphic mFaceGraphic;
     private static final int RC_HANDLE_GMS = 9001;
+    ImageView imageView;
+    private GraphicOverlay mOverlay;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
@@ -53,21 +56,18 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_face_filter);
-        click = (ImageView)findViewById(R.id.click);
-        click1 = (ImageView)findViewById(R.id.click1);
-        click2 = (ImageView)findViewById(R.id.click2);
-        click3 = (ImageView)findViewById(R.id.click3);
-        click4 = (ImageView)findViewById(R.id.click4);
-        click.setOnClickListener(this);
-        click1.setOnClickListener(this);
-        click2.setOnClickListener(this);
-        click3.setOnClickListener(this);
-        click4.setOnClickListener(this);
-        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
-
+        init();
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
+        mPreview = (CameraSourcePreview) findViewById(R.id.preview);
+        mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+        final ImageButton button = (ImageButton) findViewById(R.id.flipButton);
+        button.setOnClickListener(mFlipButtonListener);
+
+        if (icicle != null) {
+            mIsFrontFacing = icicle.getBoolean("IsFrontFacing");
+        }
+
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource();
@@ -75,12 +75,53 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
             requestCameraPermission();
         }
     }
+    private View.OnClickListener mFlipButtonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            mIsFrontFacing = !mIsFrontFacing;
+
+            if (mCameraSource != null) {
+                mCameraSource.release();
+                mCameraSource = null;
+            }
+
+            createCameraSource();
+            startCameraSource();
+        }
+    };
+
+    private void init() {
+        click = (ImageView)findViewById(R.id.click);
+        click1 = (ImageView)findViewById(R.id.click1);
+        click2 = (ImageView)findViewById(R.id.click2);
+        click3 = (ImageView)findViewById(R.id.click3);
+        click4 = (ImageView)findViewById(R.id.click4);
+        click5 = (ImageView)findViewById(R.id.click5);
+        click6 = (ImageView)findViewById(R.id.click6);
+        click7 = (ImageView)findViewById(R.id.click7);
+        click8 = (ImageView)findViewById(R.id.click8);
+        click9 = (ImageView)findViewById(R.id.click9);
+        click10 = (ImageView)findViewById(R.id.click10);
+        click11 = (ImageView)findViewById(R.id.click11);
+        click.setOnClickListener(this);
+        click1.setOnClickListener(this);
+        click2.setOnClickListener(this);
+        click3.setOnClickListener(this);
+        click4.setOnClickListener(this);
+        click5.setOnClickListener(this);
+        click6.setOnClickListener(this);
+        click7.setOnClickListener(this);
+        click8.setOnClickListener(this);
+        click9.setOnClickListener(this);
+        click10.setOnClickListener(this);
+        click11.setOnClickListener(this);
+    }
 
     /**
      * Handles the requesting of the camera permission.  This includes
      * showing a "Snackbar" message of why the permission is needed then
      * sending the request.
      */
+
     private void requestCameraPermission() {
         Log.w(TAG, "Camera permission is not granted. Requesting permission");
 
@@ -116,12 +157,16 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
 
     private void createCameraSource() {
 
-        Context context = getApplicationContext();
+        final Context context = getApplicationContext();
         FaceDetector detector = new FaceDetector.Builder(context)
+                .setTrackingEnabled(true)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setMode(FaceDetector.ACCURATE_MODE)
+                .setMode(FaceDetector.FAST_MODE)
+                .setProminentFaceOnly(mIsFrontFacing)
+                .setMinFaceSize(mIsFrontFacing ? 0.35f : 0.15f)
                 .build();
+
 
         detector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
@@ -139,12 +184,17 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
             Log.w(TAG, "Face detector dependencies are not yet available.");
         }
 
+        int facing = CameraSource.CAMERA_FACING_FRONT;
+        if (!mIsFrontFacing) {
+            facing = CameraSource.CAMERA_FACING_BACK;
+        }
         mCameraSource = new CameraSource.Builder(context, detector)
                 .setRequestedPreviewSize(640, 480)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
+                .setFacing(facing)
                 .setRequestedFps(30.0f)
                 .build();
     }
+
 
     /**
      * Restarts the camera.
@@ -171,6 +221,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
      * Releases the resources associated with the camera source, the associated detector, and the
      * rest of the processing pipeline.
      */
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -198,6 +249,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
             Log.d(TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -236,9 +288,11 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
      * (e.g., because onResume was called before the camera source was created), this will be called
      * again when the camera source is created.
      */
+
     private void startCameraSource() {
 
         // check that the device has play services available.
+
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
                 getApplicationContext());
         if (code != ConnectionResult.SUCCESS) {
@@ -263,11 +317,14 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
        switch (view.getId()){
            case R.id.click:
            {
+               Intent intent = new Intent(FaceFilterActivity.this,FaceGraphic.class);
+               startActivity(intent);
                Toast.makeText(this, "Click.", Toast.LENGTH_SHORT).show();
                break;
            }
            case R.id.click1:
            {
+
                Toast.makeText(this, "Click1.", Toast.LENGTH_SHORT).show();
                break;
            }
@@ -286,15 +343,48 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
                Toast.makeText(this, "Click4.", Toast.LENGTH_SHORT).show();
                break;
            }
+           case R.id.click5:
+           {
+               Toast.makeText(this, "Click5.", Toast.LENGTH_SHORT).show();
+               break;
+           }
+           case R.id.click6:
+           {
+               Toast.makeText(this, "Click6.", Toast.LENGTH_SHORT).show();
+               break;
+
+           }
+           case R.id.click7:
+           {
+               Toast.makeText(this, "Click7.", Toast.LENGTH_SHORT).show();
+               break;
+
+           } case R.id.click8:
+           {
+
+               Toast.makeText(this, "Click8.", Toast.LENGTH_SHORT).show();
+               break;
+
+           }
+           case R.id.click9:
+           {
+               Toast.makeText(this, "Click9.", Toast.LENGTH_SHORT).show();
+               break;
+
+           }
+           case R.id.click10:
+           {
+               Toast.makeText(this, "Click10.", Toast.LENGTH_SHORT).show();
+               break;
+
+           }
+           case R.id.click11:
+           {
+               Toast.makeText(this, "Click11.", Toast.LENGTH_SHORT).show();
+               break;
+
+           }
        }
-
-        click.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(FaceFilterActivity.this, "Hello...", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     //==============================================================================================
@@ -305,6 +395,7 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
      * Factory for creating a face tracker to be associated with a new face.  The multiprocessor
      * uses this factory to create face trackers as needed -- one for each individual.
      */
+
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
         @Override
         public Tracker<Face> create(Face face) {
@@ -317,8 +408,8 @@ public class FaceFilterActivity extends AppCompatActivity implements View.OnClic
      * associated face overlay.
      */
     private class GraphicFaceTracker extends Tracker<Face> {
-        private GraphicOverlay mOverlay;
-        private FaceGraphic mFaceGraphic;
+
+
 
         GraphicFaceTracker(GraphicOverlay overlay) {
             mOverlay = overlay;

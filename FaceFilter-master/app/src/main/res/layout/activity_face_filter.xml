@@ -1,76 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    android:background="@color/colorPrimary"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/topLayout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    android:background="@color/colorPrimary"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
-    <com.android.facefilter.camera.CameraSourcePreview
-        android:id="@+id/preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.android.facefilter.camera.GraphicOverlay
-            android:id="@+id/faceOverlay"
+        <com.android.facefilter.camera.CameraSourcePreview
+            android:id="@+id/preview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
-        </com.android.facefilter.camera.GraphicOverlay>
+            <com.android.facefilter.camera.GraphicOverlay
+                android:id="@+id/faceOverlay"
 
-    </com.android.facefilter.camera.CameraSourcePreview>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </com.android.facefilter.camera.GraphicOverlay>
+
+        </com.android.facefilter.camera.CameraSourcePreview>
+
+
     </LinearLayout>
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <ImageView
-        android:layout_weight="1"
-        android:layout_margin="3dp"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:id="@+id/click"
-        android:src="@drawable/snapcamera"
-        />
-        <ImageView
-            android:layout_weight="1"
-            android:layout_margin="3dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:layout_weight="4.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/flipButton"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:id="@+id/click1"
-            android:src="@drawable/snapcamera"
-            />
-        <ImageView
+            android:src="@drawable/switch_cameras" />
+        </LinearLayout>
+        <LinearLayout
             android:layout_weight="1"
-            android:layout_margin="3dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/click2"
-            android:src="@drawable/snapcamera"
-            />
-        <ImageView
-            android:layout_weight="1"
-            android:layout_margin="3dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/click3"
-            android:src="@drawable/snapcamera"
-            />
-        <ImageView
-            android:layout_weight="1"
-            android:layout_margin="3dp"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/click4"
-            android:src="@drawable/snapcamera"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:fillViewport="true"
+                android:scrollbars="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/click"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/c" />
+
+                    <ImageView
+                        android:id="@+id/click1"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/a" />
+
+                    <ImageView
+                        android:id="@+id/click2"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/b" />
+
+                    <ImageView
+                        android:id="@+id/click3"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/redheart" />
+
+                    <ImageView
+                        android:id="@+id/click4"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/orangepanda" />
+
+                    <ImageView
+                        android:id="@+id/click5"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/bheart" />
+
+                    <ImageView
+                        android:id="@+id/click6"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/redheart" />
+
+                    <ImageView
+                        android:id="@+id/click7"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/bgold" />
+
+                    <ImageView
+                        android:id="@+id/click8"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/kuku" />
+
+                    <ImageView
+                        android:id="@+id/click9"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/sprspcy" />
+
+                    <ImageView
+                        android:id="@+id/click10"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/rspacy" />
+
+                    <ImageView
+                        android:id="@+id/click11"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/snapcamera" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+
