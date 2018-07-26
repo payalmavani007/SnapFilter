@@ -134,8 +134,62 @@ public class CameraSourcePreview extends ViewGroup {
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         }
     }
-
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+
+        int previewWidth = 320;
+        int previewHeight = 240;
+        if (mCameraSource != null) {
+            Size size = mCameraSource.getPreviewSize();
+            if (size != null) {
+                previewWidth = size.getWidth();
+                previewHeight = size.getHeight();
+            }
+        }
+
+        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
+        if (isPortraitMode()) {
+            int tmp = previewWidth;
+            previewWidth = previewHeight;
+            previewHeight = tmp;
+        }
+
+        final int viewWidth = right - left;
+        final int viewHeight = bottom - top;
+
+        int childWidth;
+        int childHeight;
+        int childXOffset = 0;
+        int childYOffset = 0;
+        float widthRatio = (float) viewWidth / (float) previewWidth;
+        float heightRatio = (float) viewHeight / (float) previewHeight;
+
+
+        if (widthRatio > heightRatio) {
+            childWidth = viewWidth;
+            childHeight = (int) ((float) previewHeight * widthRatio);
+            childYOffset = (childHeight - viewHeight) / 2;
+        } else {
+            childWidth = (int) ((float) previewWidth * heightRatio);
+            childHeight = viewHeight;
+            childXOffset = (childWidth - viewWidth) / 2;
+        }
+
+        for (int i = 0; i < getChildCount(); ++i) {
+            // One dimension will be cropped.  We shift child over or up by this offset and adjust
+            // the size to maintain the proper aspect ratio.
+            getChildAt(i).layout(
+                    -1 * childXOffset, -1 * childYOffset,
+                    childWidth - childXOffset, childHeight - childYOffset);
+        }
+
+        try {
+            startIfReady();
+        } catch (IOException e) {
+            Log.e(TAG, "Could not start camera source.", e);
+        }
+    }
+ /*   @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = 320;
         int height = 240;
@@ -176,7 +230,7 @@ public class CameraSourcePreview extends ViewGroup {
         } catch (IOException e) {
             Log.e(TAG, "Could not start camera source.", e);
         }
-    }
+    }*/
 
     private boolean isPortraitMode() {
         int orientation = mContext.getResources().getConfiguration().orientation;

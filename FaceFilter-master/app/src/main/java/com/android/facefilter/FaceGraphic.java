@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) The Android Open Source Project
  *
@@ -13,26 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.android.facefilter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-
 import com.android.facefilter.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
-
 import java.net.URISyntaxException;
 
 /**
  * Graphic instance for rendering face position, orientation, and landmarks within an associated
  * graphic overlay view.
  */
+
 class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float FACE_POSITION_RADIUS = 10.0f;
     private static final float ID_TEXT_SIZE = 40.0f;
@@ -44,13 +44,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private static final int COLOR_CHOICES[] = {
-            Color.BLUE,
-            Color.CYAN,
-            Color.GREEN,
-            Color.MAGENTA,
-            Color.RED,
-            Color.WHITE,
-            Color.YELLOW
+            Color.TRANSPARENT
     };
     private static int mCurrentColorIndex = 0;
 
@@ -63,7 +57,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private Bitmap bitmap;
     private Bitmap op;
 
-    FaceGraphic(GraphicOverlay overlay)  {
+    FaceGraphic(GraphicOverlay overlay,int img)  {
         super(overlay);
 
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
@@ -81,7 +75,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
 
-        bitmap = BitmapFactory.decodeResource(getOverlay().getContext().getResources(), R.drawable.op);
+        bitmap = BitmapFactory.decodeResource(getOverlay().getContext().getResources(),img);
 
         op = bitmap;
 
@@ -117,6 +111,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         }
 
         // Draws a circle at the position of the detected face, with the face's track id below.
+
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -127,7 +122,6 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
         canvas.drawBitmap(op, left, top, new Paint());
-
     }
 
     private float getNoseAndMouthDistance(PointF nose, PointF mouth) {
